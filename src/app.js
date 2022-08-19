@@ -6,7 +6,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
 
-app.use('/', router);
+app.use('/api', router);
 
 app.use((err, req, res, next) => {
     if(!err) return next();
