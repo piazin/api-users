@@ -6,7 +6,7 @@ class User {
     async create(name, email, password){
         
         try {
-            var hash = bcrypt.hashSync(password, 10);
+            var hash = bcrypt.hashSync(password.toString(), 10);
 
             await knex.insert({name, email, password: hash, role: 0}).from('user');
             return {status: true};
@@ -40,7 +40,7 @@ class User {
 
     async changePassword(id, password){
         try {
-            var hash = bcrypt.hashSync(password, 10);
+            var hash = await bcrypt.hash(password.toString(), 10);
 
             await knex.update({password: hash}).from('user').where({id: id});
             return {status: true};
@@ -52,7 +52,7 @@ class User {
 
     async findAll(){
         try {
-            var res = await knex.select().from('user');
+            var res = await knex.select(['id', 'name', 'email', 'role']).from('user');
             return res.length > 0 ? res : undefined;
         } catch (error) {
             console.error(error);

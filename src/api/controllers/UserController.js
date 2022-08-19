@@ -1,11 +1,26 @@
 const User = require("../services/User");
 const Token = require('../services/Token');
 const {user_err, user_sucess} = require('../../constants');
+const config = require('../../config');
+
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 class UserController {
     async findAll(req, res){
         var result = await User.findAll();
         result != undefined ? res.status(200).json(result) : res.status(404).json({msg: user_err.err404});
+    }
+
+    async findUser(req, res){
+        var id = req.params.id;
+      
+        if(id == undefined) return res.status(400).json({error: 1, messageError: user_err.invalid_params});
+
+        var result = await User.findByID(id);
+
+        return result.status ? res.status(200).json(result.res) : res.status(404).json({error: 1, messageError: user_err.user_not_found});
+
     }
 
     async new(req, res){
@@ -101,6 +116,26 @@ class UserController {
 
         await Token.setTokenUsed(result.token.token);
         res.status(200).json({msg: user_sucess.update});
+    }
+
+    async login(req, res){
+        var {email, password} = req.body;
+
+        if((email, password) == undefined) return res.status(400).json({error: 1, messageError: user_err.invalid_params});
+
+        var result = await User.findByEmail(email);
+
+        if(!result.status) return res.status(400).json({error: 1, messageError: user_err.user_not_found});
+
+        var decoded = await bcrypt.compare(password.toString(), result.res.password);
+
+        if(!decoded) return res.status(400).json({error: 1, messageError: user_err.password_invalid});
+
+        var token = jwt.sign({user: result.res.email, role: result.res.role}, config.secret, {
+            expiresIn: '1h'
+        });
+        //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWRtQGFkbS5jb20iLCJyb2xlIjowLCJpYXQiOjE2NjA5NTA5MjQsImV4cCI6MTY2MDk1NDUyNH0.jeOPN6jxoODxCqLB3VwDIaC-ZOHPKRdoMrkKsAZCJgI
+        res.status(201).json({msg: user_sucess.token, token: token});
     }
 }
 
