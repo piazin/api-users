@@ -9,7 +9,7 @@ function auth (req, res, next){
         
         try {
             var decoded = jwt.verify(token, config.secret);
-
+            
             if(decoded.role == 1){
                 next();
             } else {

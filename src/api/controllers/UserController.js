@@ -67,7 +67,7 @@ class UserController {
         if(user_exits.res.email == email) return res.status(400).json({error: 1, messageError: user_err.user_already_registered});
 
         var exits_email = await User.findEmail(email);
-        if(exits_email.status) return res.status(404).json({error: 1, messageError: user_err.user_already_registered});
+        if(exits_email) return res.status(404).json({error: 1, messageError: user_err.user_already_registered});
 
 
         var editUser = {id, email};
