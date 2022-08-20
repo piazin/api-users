@@ -1,12 +1,13 @@
 "use restric";
 const nodemailer = require('nodemailer');
+const config = require('../config');
 
 var send_email = async(email, token) => {
     var trasporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
-            user: "ls4803326@gmail.com",
-            pass: "xdpeyyyvfprfauqh"
+            user: config.email.u,
+            pass: config.email.pass
         }
     });
 
