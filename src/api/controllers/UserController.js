@@ -1,5 +1,6 @@
 const User = require("../services/User");
 const Token = require('../services/Token');
+const send_email = require('../../utils/send_email');
 const {user_err, user_sucess} = require('../../constants');
 const config = require('../../config');
 
@@ -95,7 +96,11 @@ class UserController {
         
         var result = await Token.generateToken(user_exits.res.id);
     
-        result.status ? res.status(200).json({msg: user_sucess.token, token: result.token}) : res.status(500).json({error: 1, messageError: user_err.failure_generete_token});
+        if(!result.status) return res.status(500).json({error: 1, messageError: user_err.failure_generete_token});
+
+        var email_send = await send_email(email, result.token);
+
+        email_send ? res.status(200).json({msg: user_sucess.token, token: result.token}) : res.status(500).json({error: 1, messageError: user_err.failure_generete_token});
         
     }
 
