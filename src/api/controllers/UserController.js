@@ -201,7 +201,7 @@ class UserController {
 
     if (!result.status)
       return res
-        .status(400)
+        .status(404)
         .json({ error: 1, messageError: user_err.user_not_found });
 
     var decoded = await bcrypt.compare(

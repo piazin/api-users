@@ -23,6 +23,8 @@ function auth(req, res, next) {
         .status(401)
         .json({ error: 1, messageError: 'invalid credentias' });
     }
+  } else {
+    res.status(401).json({ error: 1, messageError: 'invalid credentias' });
   }
 }
 

@@ -103,7 +103,7 @@
           }
         },
         "responses": {
-          "201": {
+          "200": {
             "description": "user updated successfully"
           },
           "400": {
@@ -124,12 +124,15 @@
         }
       }
     },
-    "/user/:id": {
+    "/user/{id}": {
       "get": {
         "tags": ["users id"],
         "parameters": {
-          "in": "query",
+          "in": "path",
           "name": "id",
+          "schema": {
+            "type": "integer"
+          },
           "required": true
         },
         "responses": {
@@ -138,6 +141,48 @@
           },
           "404": {
             "description": "nothing around here"
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": ["login"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "auth true"
+          },
+          "400": {
+            "description": "invalid password / invalid parameters"
+          },
+          "401": {
+            "description": "unauthorized user"
+          },
+          "403": {
+            "description": "unauthorized user"
+          },
+          "404": {
+            "description": "unregistered user"
+          },
+          "500": {
+            "description": "failed to login user"
           }
         }
       }
