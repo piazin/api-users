@@ -1,0 +1,82 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "api rest users",
+    "description": "users api",
+    "version": "1.0.0"
+  },
+  "basePath": "/",
+
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "responses": {
+        "UnauthorizedError": {
+          "description": "unauthorized user"
+        }
+      }
+    }
+  },
+
+  "security": { "bearerAuth": [] },
+
+  "paths": {
+    "/api/user": {
+      "get": {
+        "tags": ["users"],
+        "responses": {
+          "200": {
+            "description": "{users}"
+          },
+          "404": {
+            "description": "nothing around here"
+          }
+        }
+      },
+      "post": {
+        "tags": ["users"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "user created successfully"
+          },
+          "400": {
+            "description": "user already registered / invalid parameters"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "description": "unauthorized user"
+          },
+          "500": {
+            "description": "failed to create user"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,21 +1,21 @@
-"use restric";
+'use restric';
 const nodemailer = require('nodemailer');
 const config = require('../config');
 
-var send_email = async(email, token) => {
-    var trasporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-            user: config.email.u,
-            pass: config.email.pass
-        }
-    });
+var send_email = async (email, token) => {
+  var trasporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: config.email.u,
+      pass: config.email.pass,
+    },
+  });
 
-    var mailOptions = {
-        from: "ls4803326@gmail.com",
-        to: `${email}`,
-        subject: "reset password",
-        html: `
+  var mailOptions = {
+    from: 'ls4803326@gmail.com',
+    to: `${email}`,
+    subject: 'reset password',
+    html: `
         <!DOCTYPE html>
         <html>
         <head>
@@ -291,17 +291,17 @@ var send_email = async(email, token) => {
         
         </body>
         </html>
-        `
-    };
+        `,
+  };
 
-    await trasporter.sendMail(mailOptions, (err, info)=>{
-        if(err) {
-            console.error(err);
-            return false;
-        };
-    });
+  await trasporter.sendMail(mailOptions, (err, info) => {
+    if (err) {
+      console.error(err);
+      return false;
+    }
+  });
 
-    return true;
-}
+  return true;
+};
 
 module.exports = send_email;
