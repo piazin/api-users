@@ -4,7 +4,7 @@ const auth = require('../middleware/auth');
 
 router
   .route('/user')
-  .get(auth, UserController.findAll)
+  .get(UserController.findAll)
   .post(auth, UserController.new)
   .put(auth, UserController.edit);
 

@@ -95,7 +95,7 @@ class UserController {
     var user_exits = await User.findByID(id);
     if (!user_exits.status)
       return res
-        .status(406)
+        .status(404)
         .json({ error: 1, messageError: user_err.user_not_found });
 
     if (user_exits.res.email == email)

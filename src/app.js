@@ -18,7 +18,6 @@ app.use((err, req, res, next) => {
 });
 
 app.use('/api', router);
-
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 app.use((req, res, next) => {
