@@ -36,7 +36,7 @@ class UserController {
     var { name, email, password } = req.body;
 
     //verifica se o email é valido
-    if (email == undefined || email.length === 0)
+    if (!email || email.length === 0 || !name)
       return res
         .status(400)
         .json({ error: 1, messageError: user_err.email_invalid });
