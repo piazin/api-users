@@ -1,5 +1,6 @@
 const User = require('../services/User');
 const Token = require('../services/Token');
+const ProfilePic = require('../services/ProfilePic');
 const send_email = require('../../utils/send_email');
 const { user_err, user_sucess } = require('../../constants');
 const config = require('../../config');
@@ -223,6 +224,19 @@ class UserController {
     );
 
     res.status(201).json({ msg: user_sucess.token, token: token });
+  }
+
+  async upload_profile_pic(req, res) {
+    if (!req.file)
+      return res.status(400).json({
+        msg: 'bad request',
+      });
+
+    const result = await ProfilePic.upload(req.file, 1);
+
+    !result.status
+      ? res.status(400).json({ msg: 'Bad request' })
+      : res.status(200).json({ msg: 'upload sucess' });
   }
 }
 

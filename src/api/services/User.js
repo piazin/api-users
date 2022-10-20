@@ -50,7 +50,19 @@ class User {
 
   async findAll() {
     try {
-      var res = await knex.select(['id', 'name', 'email', 'role']).from('user');
+      var res = await knex
+        .select([
+          'user.id',
+          'user.name',
+          'user.email',
+          'user.role',
+
+          'profile_pic.originalName',
+          'profile_pic.filename',
+          'profile_pic.path',
+        ])
+        .join('profile_pic', 'user.id', 'profile_pic.user_id')
+        .from('user');
       return res.length > 0 ? res : undefined;
     } catch (error) {
       console.error(error);
