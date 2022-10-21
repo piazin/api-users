@@ -22,15 +22,6 @@ class ProfilePic {
           .where({ user_id: user_id });
       }
 
-      await knex
-        .from('profile_pic')
-        .insert({
-          originalname: fileInfo.originalname,
-          filename: fileInfo.filename,
-          path: fileInfo.path,
-          user_id,
-        })
-        .where({ user_id: user_id });
       return { status: true };
     } catch (error) {
       console.error(error);

@@ -12,7 +12,13 @@ class UserController {
   async findAll(req, res) {
     var result = await User.findAll();
     result != undefined
-      ? res.status(200).json(result)
+      ? res.status(200).json({
+          status: 200,
+          results: result.length,
+          data: {
+            users: result,
+          },
+        })
       : res.status(404).json({ msg: user_err.err404 });
   }
 

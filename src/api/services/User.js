@@ -52,28 +52,38 @@ class User {
   async findAll() {
     try {
       var res = await knex
-        .select('*')
-        .join('profile_pic', 'user.id', '=', 'profile_pic.user_id')
-        .from('user');
+        .select([
+          'user.id',
+          'user.name',
+          'user.email',
+          'user.role',
+          'profile_pic.pic_id',
+          'profile_pic.filename',
+          'profile_pic.originalName',
+          'profile_pic.path',
+        ])
+        .from('user')
+        .join('profile_pic', 'user.id', 'profile_pic.user_id');
 
-      console.log(res);
       const users = [];
+      res.forEach(
+        ({ id, name, email, role, pic_id, originalName, filename, path }) => {
+          const user = {
+            id,
+            name,
+            email,
+            role,
+            profile_pic: {
+              pic_id,
+              originalName,
+              filename,
+              path,
+            },
+          };
 
-      res.forEach(({ id, name, email, role, originalName, filename, path }) => {
-        const user = {
-          id,
-          name,
-          email,
-          role,
-          profile_pic: {
-            originalName,
-            filename,
-            path,
-          },
-        };
-
-        users.push(user);
-      });
+          users.push(user);
+        }
+      );
 
       return users.length > 0 ? users : undefined;
     } catch (error) {
