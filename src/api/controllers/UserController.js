@@ -59,6 +59,7 @@ class UserController {
     //executa a solicitação de criação
     var result = await User.create(name, email, password);
 
+    await ProfilePic.upload({}, result.data, true);
     //retorno do status da operção
     result.status
       ? res.status(201).json({ msg: user_sucess.create })
@@ -232,7 +233,7 @@ class UserController {
         msg: 'bad request',
       });
 
-    const result = await ProfilePic.upload(req.file, 1);
+    const result = await ProfilePic.upload(req.file, req.body.user_id, false);
 
     !result.status
       ? res.status(400).json({ msg: 'Bad request' })

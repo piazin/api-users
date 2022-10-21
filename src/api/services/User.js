@@ -5,9 +5,10 @@ class User {
   async create(name, email, password) {
     try {
       var hash = bcrypt.hashSync(password.toString(), 10);
-
-      await knex.insert({ name, email, password: hash, role: 0 }).from('user');
-      return { status: true };
+      var result = await knex
+        .insert({ name, email, password: hash, role: 0 })
+        .from('user');
+      return { status: true, data: result[0] };
     } catch (error) {
       console.error(error);
       return { status: false };
@@ -51,19 +52,30 @@ class User {
   async findAll() {
     try {
       var res = await knex
-        .select([
-          'user.id',
-          'user.name',
-          'user.email',
-          'user.role',
-
-          'profile_pic.originalName',
-          'profile_pic.filename',
-          'profile_pic.path',
-        ])
-        .join('profile_pic', 'user.id', 'profile_pic.user_id')
+        .select('*')
+        .join('profile_pic', 'user.id', '=', 'profile_pic.user_id')
         .from('user');
-      return res.length > 0 ? res : undefined;
+
+      console.log(res);
+      const users = [];
+
+      res.forEach(({ id, name, email, role, originalName, filename, path }) => {
+        const user = {
+          id,
+          name,
+          email,
+          role,
+          profile_pic: {
+            originalName,
+            filename,
+            path,
+          },
+        };
+
+        users.push(user);
+      });
+
+      return users.length > 0 ? users : undefined;
     } catch (error) {
       console.error(error);
       return undefined;

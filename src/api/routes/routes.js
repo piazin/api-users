@@ -9,7 +9,7 @@ const upload = multer(multerConfig);
 router
   .route('/user')
   .get(UserController.findAll)
-  .post(auth, UserController.new)
+  .post(UserController.new)
   .put(auth, UserController.edit);
 
 router

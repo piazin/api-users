@@ -1,15 +1,36 @@
 const knex = require('../database/dbconnection');
 
 class ProfilePic {
-  async upload(fileInfo, user_id) {
-    console.log(fileInfo);
+  async upload(fileInfo, user_id, isNew) {
     try {
-      await knex.from('profile_pic').insert({
-        originalname: fileInfo.originalname,
-        filename: fileInfo.filename,
-        path: fileInfo.path,
-        user_id,
-      });
+      if (isNew) {
+        await knex.from('profile_pic').insert({
+          originalname: fileInfo.originalname,
+          filename: fileInfo.filename,
+          path: fileInfo.path,
+          user_id,
+        });
+      } else {
+        await knex
+          .from('profile_pic')
+          .update({
+            originalname: fileInfo.originalname,
+            filename: fileInfo.filename,
+            path: fileInfo.path,
+            user_id,
+          })
+          .where({ user_id: user_id });
+      }
+
+      await knex
+        .from('profile_pic')
+        .insert({
+          originalname: fileInfo.originalname,
+          filename: fileInfo.filename,
+          path: fileInfo.path,
+          user_id,
+        })
+        .where({ user_id: user_id });
       return { status: true };
     } catch (error) {
       console.error(error);
